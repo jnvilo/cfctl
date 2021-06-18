@@ -1,5 +1,8 @@
-Python skeleton 
+cfctl - CloudFlare Control  
 ===
+
+A command line tool to do operations on cloudflare and avoid having to go into the web interface. 
+
 
 Test
 ---
