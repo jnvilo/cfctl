@@ -3,6 +3,7 @@ cfctl - CloudFlare Control
 
 A command line tool to do operations on cloudflare and avoid having to go into the web interface. 
 
+[![Upload Python Package](https://github.com/jnvilo/cfctl/actions/workflows/python-publish.yml/badge.svg)](https://github.com/jnvilo/cfctl/actions/workflows/python-publish.yml)
 
 Test
 ---
