@@ -3,11 +3,16 @@ import os
 from setuptools import setup
 
 PACKAGE = os.path.basename(os.path.dirname(os.path.abspath(__file__))).replace('-', '_')
+with open("README.md", "r", encoding="utf-8") as fh:
+    long_description = fh.read()
+
 
 setup(
     name=PACKAGE,
-    version="0.0.5",
+    version="0.0.15",
     packages=[PACKAGE],
+    long_description = long_description,
+    long_description_content_type="text/markdown",
     test_suite='tests',
     install_requires=["python-cloudflare",],
     entry_points = {
