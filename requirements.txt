@@ -1,8 +1,12 @@
-coverage==4.0.3
-funcsigs==1.0.0
-mock==2.0.0
-ordereddict==1.1
-pbr==1.9.1
-pep8==1.7.0
-six==1.10.0
-future
+beautifulsoup4==4.9.3
+certifi==2021.5.30
+-e git+git@github.com:jnvilo/cfctl.git@bd8999609fe4f86ffb68970a271a91c2c0a60800#egg=cfctl
+chardet==4.0.0
+cloudflare==2.8.15
+idna==2.10
+jsonlines==2.0.0
+python-cloudflare==1.0.1
+PyYAML==5.4.1
+requests==2.25.1
+soupsieve==2.2.1
+urllib3==1.26.5

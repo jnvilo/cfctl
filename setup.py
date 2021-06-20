@@ -6,14 +6,18 @@ PACKAGE = os.path.basename(os.path.dirname(os.path.abspath(__file__))).replace('
 
 setup(
     name=PACKAGE,
-    version="0.0.3",
+    version="0.0.4",
     packages=[PACKAGE],
     test_suite='tests',
     entry_points = {
         'console_scripts': ['cfctl=cfctl.cfctl:main']
     },
+    author="Jason Viloria",
+    author_email="jnvilo@gmail.com",
+    url="https://github.com/jnvilo/cfctl",
     classifiers=[
         'Development Status :: 3 - Alpha',
+        
         'Environment :: Console',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
