@@ -6,7 +6,7 @@ PACKAGE = os.path.basename(os.path.dirname(os.path.abspath(__file__))).replace('
 
 setup(
     name=PACKAGE,
-    version="0.0.2",
+    version="0.0.3",
     packages=[PACKAGE],
     test_suite='tests',
     entry_points = {
