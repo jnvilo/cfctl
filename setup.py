@@ -6,9 +6,10 @@ PACKAGE = os.path.basename(os.path.dirname(os.path.abspath(__file__))).replace('
 
 setup(
     name=PACKAGE,
-    version="0.0.4",
+    version="0.0.5",
     packages=[PACKAGE],
     test_suite='tests',
+    install_requires=["python-cloudflare",],
     entry_points = {
         'console_scripts': ['cfctl=cfctl.cfctl:main']
     },
