@@ -130,10 +130,10 @@ def do_delete_record(hostname,zone_name, rtype, rcontent, all=False):
         if iname == dns_name:
             if rcontent and icontent == rcontent:
                 
-            if all:
+            # if all:
                 #delete everything that matches the name
-            cf.zones.dns_records.delete(zone_id,i["id"])
-            
+            #cf.zones.dns_records.delete(zone_id,i["id"])
+                pass
 
 
 def main():
