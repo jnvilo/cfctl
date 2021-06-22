@@ -1,18 +1,17 @@
-cfctl - CloudFlare Control  
-===
+# cfctl - CloudFlare Control  
+
 
 A command line tool to do operations on cloudflare and avoid having to go into the web interface. 
 
 [![Upload Python Package](https://github.com/jnvilo/cfctl/actions/workflows/python-publish.yml/badge.svg)](https://github.com/jnvilo/cfctl/actions/workflows/python-publish.yml)
 
-Usage
------
+## Usage
 
-'''
-cfctl 
+### adding a record 
+    cfctl add_record -t 600 demo1.jnvilo.com A 192.168.100.1
 
-'''
-
+### delete a record
+     cfctl delete_record demo1.jnvilo.com 
 
 Test
 ---
