@@ -13,6 +13,12 @@ A command line tool to do operations on cloudflare and avoid having to go into t
 ### delete a record
      cfctl delete_record demo1.jnvilo.com 
 
+### list all records
+    cfctl list_records jnvilo.com 
+    
+### display entry
+    cfctl inspect_fqdn demo1.jnvilo.com 
+    
 Test
 ---
 
