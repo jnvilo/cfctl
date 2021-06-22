@@ -2,14 +2,16 @@ import os
 
 from setuptools import setup
 
-PACKAGE = os.path.basename(os.path.dirname(os.path.abspath(__file__))).replace('-', '_')
+#PACKAGE = os.path.basename(os.path.dirname(os.path.abspath(__file__))).replace('-', '_')
+PACKAGE="cfctl"
+
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 
 setup(
     name=PACKAGE,
-    version="0.0.17",
+    version="0.0.18",
     packages=[PACKAGE],
     long_description = long_description,
     long_description_content_type="text/markdown",
