@@ -101,7 +101,7 @@ def print_records(dns_records):
         print(f"""{name}\t{type}\t{content}""")            
         
 
-def do_delete_record(hostname,zone_name, content, ip_address_type="A"):
+def do_delete_record(hostname,zone_name, rtype, rcontent, all=False):
     
     
     cf = CloudFlare.CloudFlare()
@@ -109,21 +109,31 @@ def do_delete_record(hostname,zone_name, content, ip_address_type="A"):
     zone = get_zone(cf, zone_name)  
     proxied_state = False
     
-    dns_record = {
+    search_dns_record = {
                 'name':dns_name,
-                'type':ip_address_type,
-                'content':content,
+                'type':rtype,
+                'content':rcontent,
                 'proxied':proxied_state
             }
     
     zone_id = zone["id"]
-    dns_record = cf.zones.dns_records.get(zone_id, data=dns_record)
+    dns_record = cf.zones.dns_records.get(zone_id, data=search_dns_record)
+    
+    #The result from the above request is a list of records. If we have 
+    #multiple records and we are given an IP to delete then we delte it all.
+    
+    delete_records_list = []
     
     for i in dns_record:
         iname = i["name"]
         icontent = i["content"]
-        if iname == dns_name and icontent == content:
+        if iname == dns_name:
+            if rcontent and icontent == rcontent:
+                
+            if all:
+                #delete everything that matches the name
             cf.zones.dns_records.delete(zone_id,i["id"])
+            
 
 
 def main():
@@ -133,52 +143,33 @@ def main():
    
     subparsers = parser.add_subparsers(dest="command")
     
-    # Command: update-device
-    parser_delete_record = subparsers.add_parser(
-        "delete_record",
-        help="Delete a record",
-    )
-    parser_delete_record.add_argument(
-        "-f", "--fqdn",
-        help="FQDN",
-        required=True,
-    )
+    # Command: delete_record
+    parser_delete_record = subparsers.add_parser("delete_record",help="Delete a record",)
+    parser_delete_record.add_argument("-a","--all", action='store_true')
+    parser_delete_record.add_argument("fqdn")
+    parser_delete_record_type_parser = parser_delete_record.add_subparsers(dest="type")
+    parser_delete_record_type_A = parser_delete_record_type_parser.add_parser("A",help="A record")
+    parser_delete_record_type_A.add_argument("record")
+    parser_delete_record_type_CNAME = parser_delete_record_type_parser.add_parser("CNAME",help="CNAME record")
+    parser_delete_record_type_CNAME.add_argument("record")
     
-    parser_delete_record.add_argument(
-        "-c", "--content",
-        help="record content",
-    )
     
     # Command: list_zones
-    parser_add_record = subparsers.add_parser(
-        "add_record",
-        help="Add a dns record",
-    )
+    parser_add_record = subparsers.add_parser("add_record",help="Add a dns record",)
+    parser_add_record.add_argument("fqdn")
+    parser_add_record_type_parser = parser_add_record.add_subparsers(dest="type")
+    parser_add_record_type_A = parser_add_record_type_parser.add_parser("A",help="A record")
+    parser_add_record_type_A.add_argument("ip")
+    parser_add_record.add_argument("-t","--ttl",required=False, default="300")
     
-
-    parser_delete_record.add_argument(
-        "-u", "--update",
-        help="Update record if it exists",
-        required = False
-    )    
+    parser_add_record_type_CNAME=parser_add_record_type_parser.add_parser("CNAME",help="CNAME record")
+    parser_add_record_type_CNAME.add_argument("target_fqdn")
+    parser_add_record_type_parser.add_parser("SRV",help="SRV record")
     
-    parser_add_record.add_argument(
-        "-f", "--fqdn",
-        help="FQDN",
-        required=True,
-    )
-     
-    parser_add_record.add_argument(
-        "-c", "--content",
-        help="record content",
-        required=True,
-    )
-       
-    parser_add_record.add_argument(
-        "-t", "--type",
-        help="record type (optional)",
-        default="A"
-    )
+    
+    #parser_add_record.add_argument("-f", "--fqdn",help="FQDN",required=True,)
+    #parser_add_record.add_argument("-c", "--content",help="record content",required=True,)
+    #parser_add_record.add_argument("-t", "--type",help="record type (optional)",default="A")
      
      
     # Command: list_zone
@@ -211,6 +202,9 @@ def main():
           
     
     args = parser.parse_args()
+    print(args)
+    
+  
     if not args.command:
         parser.parse_args(["--help"])
         sys.exit(0)
@@ -223,23 +217,29 @@ def main():
         list_zones()
         
     elif command == "add_record":
-       
-        
         #since add_records expect a hostname and zone_name 
         #we need to split. 
         
         fqdn = args.fqdn
         hostname = fqdn[:fqdn.find(".")]
-        zone_name = fqdn[fqdn.find(".")+1:]        
+        zone_name = fqdn[fqdn.find(".")+1:]  
+        type = args.type
         
-        try:
-            add_record(hostname, zone_name, args.content)
-        except CloudFlareAPIError as e:
-            print(e)
-        except ZoneDoesNotExist as e:
-            msg = f"User account does not control zone: {zone_name}"
-            print(msg)
+        if type=="A":
+            ip = args.ip
+            try:
+                add_record(hostname, zone_name, ip)
+            except CloudFlareAPIError as e:
+                print(e)
+            except ZoneDoesNotExist as e:
+                msg = f"User account does not control zone: {zone_name}"
+                print(msg)
+            
+        elif type == "CNAME":
+            raise NotImplementedError("CNAME handling not yet implemented")
         
+        elif type == "SRV":
+            raise NotImplementedError("SRV not yet implemented")
         
     elif command == "delete_record":
         
@@ -247,12 +247,18 @@ def main():
         hostname = fqdn[:fqdn.find(".")]
         zone_name = fqdn[fqdn.find(".")+1:]        
        
-        try:
-            do_delete_record(hostname, zone_name, args.content)
-        except ZoneDoesNotExist as e:
-            msg = f"User account does not control zone: {zone_name}"
-            print(msg)            
+       
+        if args.all:
             
+            rcontent=None;
+            rtype=args.type
+            
+            try:
+                do_delete_record(hostname, zone_name, rtype, rcontent)
+            except ZoneDoesNotExist as e:
+                msg = f"User account does not control zone: {zone_name}"
+                print(msg)            
+                
     elif command == "list_records":
         print(args)
         do_list_records(args.zone_name)
