@@ -5,6 +5,16 @@ A command line tool to do operations on cloudflare and avoid having to go into t
 
 [![Upload Python Package](https://github.com/jnvilo/cfctl/actions/workflows/python-publish.yml/badge.svg)](https://github.com/jnvilo/cfctl/actions/workflows/python-publish.yml)
 
+## Configuration
+
+cfctl connects to Cloudflare API using an api key. You can get the API key by logging to your cloudflare account and on the top right click "My Profile" in the dropdown and select the "API Tokens" tab. There you will see "Create API Key". 
+
+Add these as environment variables to your .bashrc as :
+
+    export CF_API_EMAIL=<your cloudflare account email>
+    export CF_API_KEY=<Your API KEY>
+
+
 ## Usage
 
 ### adding a record 
