@@ -5,6 +5,15 @@ A command line tool to do operations on cloudflare and avoid having to go into t
 
 [![Upload Python Package](https://github.com/jnvilo/cfctl/actions/workflows/python-publish.yml/badge.svg)](https://github.com/jnvilo/cfctl/actions/workflows/python-publish.yml)
 
+Usage
+-----
+
+'''
+cfctl 
+
+'''
+
+
 Test
 ---
 
