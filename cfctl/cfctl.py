@@ -9,6 +9,9 @@ from CloudFlare.exceptions import CloudFlareAPIError
 class ZoneDoesNotExist(Exception):
     pass
 
+class ArgumentException(Exception):
+    pass
+
 def get_zone(cf, zone_name):
     """
     Get information about a zone. 
@@ -102,7 +105,6 @@ def print_records(dns_records):
         
 
 def do_delete_record(hostname,zone_name, rtype, rcontent, all=False):
-    
     
     cf = CloudFlare.CloudFlare()
     dns_name = f"{hostname}.{zone_name}"
@@ -199,19 +201,13 @@ def main():
         required=True,
     )
     
-          
-    
     args = parser.parse_args()
     print(args)
-    
-  
+
     if not args.command:
         parser.parse_args(["--help"])
         sys.exit(0)
-    # Do the stuff here
-    
-    #print(args)
-    #command = args.get("command")
+
     command = args.command
     if command == "list_zones":
         list_zones()
@@ -240,7 +236,10 @@ def main():
         
         elif type == "SRV":
             raise NotImplementedError("SRV not yet implemented")
-        
+        else:
+            msg = "TYPE is required parameter"
+            raise ArgumentException(msg)
+
     elif command == "delete_record":
         
         fqdn = args.fqdn
