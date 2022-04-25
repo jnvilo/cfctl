@@ -1,6 +1,9 @@
 import CloudFlare
 import argparse
 import sys
+import os
+import yaml
+from pathlib import Path
 from argparse import ArgumentParser
 
 from CloudFlare.exceptions import CloudFlareAPIError
@@ -11,6 +14,13 @@ class ZoneDoesNotExist(Exception):
 
 class ArgumentException(Exception):
     pass
+
+def get_config():
+
+    homedir = os.path.expanduser(("~"))
+    with open(Path(homedir, ".cfctl.yml"), "r") as f:
+        config_data= yaml.load(f, Loader=yaml.FullLoader)
+        print(config_data)
 
 def get_zone(cf, zone_name):
     """
@@ -139,7 +149,9 @@ def do_delete_record(hostname,zone_name, rtype, rcontent, all=False):
 
 
 def main():
-    
+
+    print(get_config())
+    sys.exit()
     parser = argparse.ArgumentParser()
     # Global options
    
@@ -260,12 +272,18 @@ def main():
                 
     elif command == "list_records":
         print(args)
-        do_list_records(args.zone_name)
+
+        try:
+            do_list_records(args.zone_name)
+        except ZoneDoesNotExist as e:
+            print("Zone does not exist. Available zones are:")
+            do_list_zones()
         
     elif command == "inspect_fqdn":
         print(args)
         zone_name = args.fqdn[args.fqdn.find(".")+1:] 
         do_inspect_fqdn(args.fqdn, zone_name)
-        
+
+
 if __name__ == '__main__':
     main()
