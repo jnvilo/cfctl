@@ -2,10 +2,6 @@ import os
 import inspect
 from pathlib import Path
 
-
-from abakusbuilder import settings
-from abakusbuilder.exceptions import * 
-
 class Configuration(object):
     """
     A global configuration that can be loaded and used to read
